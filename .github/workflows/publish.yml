@@ -4,6 +4,12 @@ on:
   release:
     types:
       - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -11,6 +17,8 @@ permissions:
 jobs:
   checks:
     uses: ./.github/workflows/test.yml
+    with:
+      ref: ${{ github.event.release.tag_name || inputs.tag }}
   publish:
     needs: checks
     runs-on: ubuntu-latest
@@ -29,7 +37,7 @@ jobs:
           python-version: "3.12"
       - name: Match the release tag to the built version
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
         run: |
           python - <<'PYTHON'
           import email
@@ -40,7 +48,7 @@ jobs:
           with zipfile.ZipFile(glob.glob("dist/*.whl")[0]) as wheel:
               metadata_path = next(name for name in wheel.namelist() if name.endswith(".dist-info/METADATA"))
               metadata = email.message_from_bytes(wheel.read(metadata_path))
-          assert os.environ["RELEASE_TAG"] == "v" + metadata["Version"]
+          assert os.environ["RELEASE_TAG"].removeprefix("v") == metadata["Version"]
           PYTHON
       - name: Publish checked distributions
         uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # release/v1

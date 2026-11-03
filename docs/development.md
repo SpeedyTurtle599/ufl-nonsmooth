@@ -39,7 +39,9 @@ The GitHub repository is `SpeedyTurtle599/ufl-nonsmooth`. Configure a PyPI pendi
 Create the GitHub Actions environment `pypi` in the repository settings. The release workflow
 builds and checks both distributions, verifies that the release tag matches the package version,
 and publishes the checked artefacts through OpenID Connect. It requires no stored PyPI token.
-Publish a GitHub release tagged `v2026.2` for the first release.
+Publish a GitHub release tagged `2026.2` or `v2026.2` for the first release.
+For an existing release, run the `Publish` workflow manually and supply its tag. Both paths
+build the tagged source and require its package version to match the release tag.
 
 ## Downstream development
 
