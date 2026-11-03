@@ -1,0 +1,51 @@
+[project]
+name = "ufl-nonsmooth"
+version = "2026.2"
+description = "Native UFL and Firedrake calculus for local piecewise-smooth laws"
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+license = "LGPL-3.0-or-later"
+license-files = ["COPYING", "COPYING.LESSER"]
+authors = [{name = "Benjamin Coveler"}]
+dependencies = [
+    "firedrake>=2026.10.0,<2026.11.0",
+    "fenics-ufl>=2026.2.0,<2026.3.0",
+    "pyadjoint-ad>=2026.10.0,<2026.11.0",
+    "numpy",
+    "mpi4py",
+    "petsc4py>=3.26.0,<3.27.0",
+]
+
+[project.urls]
+Repository = "https://github.com/SpeedyTurtle599/ufl-nonsmooth"
+Documentation = "https://github.com/SpeedyTurtle599/ufl-nonsmooth/tree/main/docs"
+Issues = "https://github.com/SpeedyTurtle599/ufl-nonsmooth/issues"
+
+[project.optional-dependencies]
+dev = ["build", "pytest", "pytest-xdist", "ruff", "ty", "twine"]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ufl_nonsmooth"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src", "tests", "docs", "README.md", "pyproject.toml", "COPYING", "COPYING.LESSER"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --tb=short"
+
+[tool.coverage.run]
+source = ["ufl_nonsmooth"]
+branch = true
